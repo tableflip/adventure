@@ -72,9 +72,10 @@
         document.getElementById('emailAddresses').removeChild(node)
       }
 
-      document.body.onpaste = function onPaste (evt) {
+      document.getElementById('emailAddresses').onpaste = function onPaste (evt) {
         evt.preventDefault()
         evt.stopPropagation()
+        // some@test.com, test@domain.ie; some@one.help
         var clipboardData = evt.clipboardData || window.clipboardData
         var emails = clipboardData.getData('Text').replace(' ', '').split(/;|,/g)
         var firstEmailNode = document.getElementById('email').childNodes[1]
