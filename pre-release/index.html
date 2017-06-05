@@ -2,11 +2,51 @@
 <html>
   <head>
     <title>TABLEFLIP adventure pre-release service</title>
-    <link rel="stylesheet" href="https://unpkg.com/tachyons@4.7.0/css/tachyons.min.css"/>
+    <link rel='stylesheet' href='https://unpkg.com/tachyons@4.7.0/css/tachyons.min.css'/>
   </head>
   <body class='pa3'>
-    <div class='mw6 mx-auto'>
-      Hello World
+    <div class='mw6 center'>
+      <div class='flex pv4 items-center items-start'>
+        <div class='f1 lh-title flex-auto'>Pre Release</div>
+        <div class='flex-none'>
+          <svg width='60' height='66' viewBox='0 0 99 109' xmlns='http://www.w3.org/2000/svg'>
+            <title>TABLEFLIP</title>
+            <g stroke='#878787' stroke-linecap='round' stroke-linejoin='round' fill='none' fill-rule='evenodd'>
+              <path d='M2 28.5L49.5 2 97 28v52.5l-46.5 27-48-26-.5-53z' stroke-width='3'/>
+              <path d='M49 15.5L12.5 34 49 53l37.5-19L49 15.5zm-36.5 19v31m37-12v30m38-49v30' stroke-width='5'/>
+            </g>
+          </svg>
+        </div>
+      </div>
+      <form action='/' method='post'>
+        <div class='pv2'>
+          <label for='repoName' class='f6 b db mb2'>Name of repository</label>
+          <input id='repoName' name='repoName' class='input-reset ba b--black-20 pa2 mb2 db w-100' type='text' required>
+        </div>
+        <div class='pv2'>
+          <label for='emails' class='f6 b db mb2'>Emails of testers <span class='normal black-60'>(comma separated list please)</span></label>
+          <input id='emails' name='emails' class='input-reset ba b--black-20 pa2 mb2 db w-100' type='email' required>
+        </div>
+        <div class='pv2'>
+          <label for='deployUrl' class='f6 b db mb2'>Deployment URL</label>
+          <input id='deployUrl' name='deployUrl' class='input-reset ba b--black-20 pa2 mb2 db w-100' type='url' required>
+        </div>
+        <div class='pv2'>
+          <label for='workplanUrl' class='f6 b db mb2'>Workplan URL</label>
+          <input id='workplanUrl' name='workplanUrl' class='input-reset ba b--black-20 pa2 mb2 db w-100' type='url' required>
+        </div>
+        <div class='pv2'>
+          <label for='release' class='f6 b db mb2'>Release number</label>
+          <input id='release' name='release' class='input-reset ba b--black-20 pa2 mb2 db w-100' type='number' required>
+        </div>
+        <div class='pv2'>
+          <label for='message' class='f6 b db mb2'>Instructions for testers</label>
+          <textarea name='message' type='textarea' rows=5 class='pa1 w-100 b--black-10' style='resize:none;'></textarea>
+        </div>
+        <div class='pv2'>
+          <input class='b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6' type='submit' value='Create Pre-Release'>
+        </div>
+      </form>
     </div>
   </body>
 </html>
