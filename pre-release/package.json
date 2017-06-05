@@ -1,0 +1,26 @@
+{
+  "name": "adventure-pre-release",
+  "version": "0.0.0",
+  "description": "pre-release service for TABLEFLIP projects",
+  "main": "index.js",
+  "scripts": {
+    "start": "micro",
+    "test": "ava index.test.js"
+  },
+  "keywords": [
+    "TABLEFLIP",
+    "micro",
+    "tachyons"
+  ],
+  "author": "TABLEFLIP",
+  "license": "ISC",
+  "devDependencies": {
+    "ava": "^0.19.1",
+    "request": "^2.81.0",
+    "request-promise": "^4.2.1",
+    "test-listen": "^1.0.2"
+  },
+  "dependencies": {
+    "micro": "^7.3.3"
+  }
+}
