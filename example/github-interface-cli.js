@@ -11,7 +11,7 @@ const {prerelease} = require('../lib/github-interface')
 const argv = require('minimist')(process.argv.slice(2))
 
 function usage () {
-  console.log(`USAGE: node github-interface.js --repo org/repo --version v2.0.0 --message 'Best releae ever'`)
+  console.log(`USAGE: node example/github-interface-cli.js --repo org/repo --version v2.0.0 --message 'Best release ever'`)
 }
 
 const { repo, version, message } = argv
