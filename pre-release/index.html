@@ -5,6 +5,12 @@
     <link rel='stylesheet' href='https://unpkg.com/tachyons@4.7.0/css/tachyons.min.css'/>
   </head>
   <body class='pa3'>
+    <script type='text/javascript'>
+      function onChange (value) {
+        var split = value.split('-')
+        document.getElementById('release').value = split[split.length - 1].replace(/0/g, '')
+      }
+    </script>
     <div class='mw6 center'>
       <div class='flex pv4 items-center items-start'>
         <div class='f1 lh-title flex-auto'>Pre Release</div>
@@ -33,7 +39,7 @@
         </div>
         <div class='pv2'>
           <label for='workplanUrl' class='f6 b db mb2'>Workplan URL</label>
-          <input id='workplanUrl' name='workplanUrl' class='input-reset ba b--black-20 pa2 mb2 db w-100' type='url' required>
+          <input id='workplanUrl' name='workplanUrl' class='input-reset ba b--black-20 pa2 mb2 db w-100' type='url' required onchange="onChange(this.value);">
         </div>
         <div class='pv2'>
           <label for='release' class='f6 b db mb2'>Release number</label>
