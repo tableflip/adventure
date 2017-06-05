@@ -6,7 +6,7 @@ This mirco-service is for capturing the details of a TABLEFLIP release for testi
 
 ## Getting started
 
-You'll need a node 6+ navigate to the folder and `npm install` then you can run a reloading server to develop on using `npm run watch`. You can run the tests with `npm test`.
+You'll need to run a node 8. Navigate to the folder and `npm install` then you can run a reloading server to develop on using `npm run watch`. You can run the tests with `npm test` (they need node 8 too).
 
 1) npm install (node 6+)
 2) npm run watch

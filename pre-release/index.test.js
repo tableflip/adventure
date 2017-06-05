@@ -5,18 +5,15 @@ const listen = require('test-listen')
 const faker = require('faker')
 const request = require('request-promise')
 const fs = require('fs')
-const validate = require('micro-joi')
 const service = require('./index.js')
-const parse = require('urlencoded-body-parser')
 
-const schema = require('./schema')
 const html = fs.readFileSync('./index.html').toString()
 
 function fakePayload (opts) {
   opts = opts || {}
   return Object.assign({
     repoName: faker.company.companyName(),
-    emails: [faker.internet.email(), faker.internet.email()].join(','),
+    emails: [faker.internet.email()],
     deployUrl: faker.internet.url(),
     workplanUrl: faker.internet.url(),
     release: faker.random.number(),

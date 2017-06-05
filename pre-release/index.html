@@ -5,12 +5,6 @@
     <link rel='stylesheet' href='https://unpkg.com/tachyons@4.7.0/css/tachyons.min.css'/>
   </head>
   <body class='pa3'>
-    <script type='text/javascript'>
-      function onChange (value) {
-        var split = value.split('-')
-        document.getElementById('release').value = split[split.length - 1].replace(/0/g, '')
-      }
-    </script>
     <div class='mw6 center'>
       <div class='flex pv4 items-center items-start'>
         <div class='f1 lh-title flex-auto'>Pre Release</div>
@@ -29,9 +23,11 @@
           <label for='repoName' class='f6 b db mb2'>Name of repository</label>
           <input id='repoName' name='repoName' class='input-reset ba b--black-20 pa2 mb2 db w-100' type='text' required>
         </div>
-        <div class='pv2'>
-          <label for='emails' class='f6 b db mb2'>Emails of testers <span class='normal black-60'>(comma separated list please)</span></label>
-          <input id='emails' name='emails' class='input-reset ba b--black-20 pa2 mb2 db w-100' type='email' required>
+        <div class='pv2' id='emailAddresses'>
+          <label for='email' class='f6 b db mb2'>Emails of testers <span class='normal black-60 ml1' onClick="addEmailAddress();">+add</span></label>
+          <div id='email' class='flex items-center'>
+            <input name='emails' class='input-reset ba b--black-20 pa2 mb2 db flex-auto' type='email' required>
+          </div>
         </div>
         <div class='pv2'>
           <label for='deployUrl' class='f6 b db mb2'>Deployment URL</label>
@@ -54,5 +50,37 @@
         </div>
       </form>
     </div>
+    <div id='delete-btn' class='o-0 pointer flex-none ml1 f6 black-60' onClick="removeEmail(this.parentElement);">remove</div>
+    <script type='text/javascript'>
+      function onChange (value) {
+        var split = value.split('-')
+        document.getElementById('release').value = split[split.length - 1].replace(/0/g, '')
+      }
+
+      function addEmailAddress (value) {
+        value = value || ''
+        var emailNodes = document.getElementById('emailAddresses').childNodes
+        var emailField = emailNodes[3].cloneNode(true)
+        var deleteNode = document.getElementById('delete-btn').cloneNode(true)
+        emailField.appendChild(deleteNode)
+        emailField.childNodes[1].value = value
+        deleteNode.classList.remove('o-0')
+        document.getElementById('emailAddresses').appendChild(emailField)
+      }
+
+      function removeEmail (node) {
+        document.getElementById('emailAddresses').removeChild(node)
+      }
+
+      document.body.onpaste = function onPaste (evt) {
+        evt.preventDefault()
+        evt.stopPropagation()
+        var clipboardData = evt.clipboardData || window.clipboardData
+        var emails = clipboardData.getData('Text').replace(' ', '').split(/;|,/g)
+        var firstEmailNode = document.getElementById('email').childNodes[1]
+        firstEmailNode.value = emails.splice(0, 1)
+        emails.forEach(function (email) { addEmailAddress(email) })
+      }
+    </script>
   </body>
 </html>
