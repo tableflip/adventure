@@ -32,6 +32,6 @@ prerelease({repos, version, message})
     console.log(`Check it out: ${url}`)
   })
   .catch((err) => {
-    console.error(e)
+    console.error(err)
     process.exit(-1)
   })
