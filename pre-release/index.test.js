@@ -13,3 +13,11 @@ test('Should be able to visit the web form', async t => {
   const body = await request(url)
   t.is(body, html)
 })
+
+test('Should be able to post a payload', async t => {
+  const server = micro(endpoint)
+  const uri = await listen(server)
+  const body = { some: 'payload' }
+  const res = await request.post({ uri, body, json: true, resolveWithFullResponse: true })
+  t.deepEqual(res.statusCode, 201)
+})
