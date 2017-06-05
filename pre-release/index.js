@@ -14,11 +14,13 @@ const service = async (req, res) => {
   if (req.method === 'POST') {
     const body = await parse(req)
     const error = Joi.validate(body, schema).error
+
     if (error) {
       send(res, 400, JSON.stringify(error.details))
-      return
+    } else {
+      // do more things with the data i.e. explode the string of comma separated email addresses
+      send(res, 201, body)
     }
-    send(res, 201, body)
   } else {
     res.end(html.toString())
   }

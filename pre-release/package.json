@@ -13,7 +13,8 @@
   "keywords": [
     "TABLEFLIP",
     "micro",
-    "tachyons"
+    "adventure",
+    "pre-release"
   ],
   "author": "TABLEFLIP",
   "license": "ISC",
@@ -31,7 +32,6 @@
   "dependencies": {
     "joi-browser": "^10.0.6",
     "micro": "^7.3.3",
-    "micro-joi": "^1.0.1",
     "urlencoded-body-parser": "^2.0.1"
   }
 }
