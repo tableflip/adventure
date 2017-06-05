@@ -18,7 +18,7 @@ const service = async (req, res) => {
       send(res, 400, JSON.stringify(error.details))
       return
     }
-    send(res, 201, JSON.stringify(body))
+    send(res, 201, body)
   } else {
     res.end(html.toString())
   }
