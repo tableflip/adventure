@@ -1,8 +1,14 @@
-const Fs = require('fs')
-const Path = require('path')
 const scuttlebot = require('scuttlebot')
 const ssbKeys = require('ssb-keys')
 const inject = require('ssb-config/inject')
+
+const createSbot = scuttlebot
+  .use(require('scuttlebot/plugins/master'))
+  .use(require('scuttlebot/plugins/invite'))
+  .use(require('scuttlebot/plugins/friends'))
+  .use(require('scuttlebot/plugins/gossip'))
+  .use(require('scuttlebot/plugins/replicate'))
+  .use(require('ssb-ws'))
 
 function createServer (name, opts, cb) {
   if (!cb) {
@@ -11,16 +17,15 @@ function createServer (name, opts, cb) {
   }
 
   const ssbConfig = inject(name || 'ssb-pre-release', opts)
-  const keyPath = Path.join(ssbConfig.path, 'secret.key')
 
-  ssbKeys.loadOrCreate(keyPath, (err, keys) => {
+  if (!opts.keyPath) {
+    return setTimeout(() => cb(null, createSbot(opts)))
+  }
+
+  ssbKeys.loadOrCreate(opts.keyPath, (err, keys) => {
     if (err) return cb(err)
-
-    const server = scuttlebot(Object.assign({ keys }, ssbConfig))
-    const manifest = server.getManifest()
-    const manifestPath = Path.join(ssbConfig.path, 'manifest.json')
-
-    Fs.writeFile(manifestPath, JSON.stringify(manifest), (err) => cb(err, server))
+    ssbConfig.keys = keys
+    cb(null, createSbot(ssbConfig))
   })
 }
 
