@@ -2,7 +2,7 @@ const Joi = require('joi-browser')
 
 module.exports = Joi.object({
   masterRepo: Joi.string().required(),
-  repos: Joi.array().items(Joi.string().uri()),
+  repos: Joi.array().items(Joi.string()),
   testersEmails: Joi.array().items(Joi.string().email()).min(1).required(),
   deployment: Joi.string().uri().required(),
   workplan: Joi.string().uri().required(),

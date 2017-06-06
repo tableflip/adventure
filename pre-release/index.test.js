@@ -51,7 +51,7 @@ test('everything goes well, no validation errors', async t => {
     resolveWithFullResponse: true
   })
   t.is(res.statusCode, 201)
-  payload.release = payload.release.toString()
+  payload.version = payload.version.toString()
   t.deepEqual(payload, JSON.parse(res.body))
 })
 
