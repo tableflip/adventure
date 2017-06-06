@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>TABLEFLIP adventure pre-release service</title>
+    <link rel='stylesheet' href='https://unpkg.com/tachyons@4.7.0/css/tachyons.min.css'/>
+  </head>
+  <body class='pa3'>
+    <div class='mw6 center'>
+      <div class='flex pv4 items-center items-start'>
+        <div class='f1 lh-title flex-auto'>Pre Release</div>
+        <div class='flex-none'>
+          <svg width='60' height='66' viewBox='0 0 99 109' xmlns='http://www.w3.org/2000/svg'>
+            <title>TABLEFLIP</title>
+            <g stroke='#878787' stroke-linecap='round' stroke-linejoin='round' fill='none' fill-rule='evenodd'>
+              <path d='M2 28.5L49.5 2 97 28v52.5l-46.5 27-48-26-.5-53z' stroke-width='3'/>
+              <path d='M49 15.5L12.5 34 49 53l37.5-19L49 15.5zm-36.5 19v31m37-12v30m38-49v30' stroke-width='5'/>
+            </g>
+          </svg>
+        </div>
+      </div>
+      <form action='/' method='post'>
+        <div class='pv2'>
+          <label for='masterRepo' class='f6 b db mb2'>Name of master repository</label>
+          <input id='masterRepo' name='masterRepo' class='input-reset ba b--black-20 pa2 mb2 db w-100' type='text' required>
+        </div>
+        <div class='pv2' id='repos'>
+          <label for='repos' class='f6 b db mb2'>
+            Other project repos (optional)
+            <div class='normal black-60 ml1 dib' onClick="addItem('', document.getElementById('repos'))">
+              <svg width='14px' height='14px' viewBox='0 0 24 24' transform='translate(0, 2.5)'>
+                <path d='M20.485 20.485c-4.686 4.687-12.284 4.687-16.97 0-4.687-4.686-4.687-12.284 0-16.97 4.686-4.687 12.284-4.687 16.97 0 4.687 4.686 4.687 12.284 0 16.97zm-9.177-.685h1.95v-6.825h6.825v-1.95h-6.825V4.2h-1.95v6.825H4.483v1.95h6.825V19.8z' fill='rgba(0, 0, 0, .4)' fill-rule='evenodd' />
+              </svg>
+            </div>
+          </label>
+          <div id='repo' class='flex items-center'>
+            <input name='repos' class='input-reset ba b--black-20 pa2 mb2 db flex-auto' type='text'>
+          </div>
+        </div>
+        <div class='pv2' id='emails'>
+          <label for='email' class='f6 b db mb2'>
+            Emails of testers
+            <div class='normal black-60 ml1 dib' onClick="addItem('', document.getElementById('emails'))">
+              <svg width='14px' height='14px' viewBox='0 0 24 24' transform='translate(0, 2.5)'>
+                <path d='M20.485 20.485c-4.686 4.687-12.284 4.687-16.97 0-4.687-4.686-4.687-12.284 0-16.97 4.686-4.687 12.284-4.687 16.97 0 4.687 4.686 4.687 12.284 0 16.97zm-9.177-.685h1.95v-6.825h6.825v-1.95h-6.825V4.2h-1.95v6.825H4.483v1.95h6.825V19.8z' fill='rgba(0, 0, 0, .4)' fill-rule='evenodd' />
+              </svg>
+            </div>
+          </label>
+          <div id='email' class='flex items-center'>
+            <input name='emails' class='input-reset ba b--black-20 pa2 mb2 db flex-auto' type='email' required>
+          </div>
+        </div>
+        <div class='pv2'>
+          <label for='deployment' class='f6 b db mb2'>Deployment URL</label>
+          <input id='deployment' name='deployment' class='input-reset ba b--black-20 pa2 mb2 db w-100' type='url' required>
+        </div>
+        <div class='pv2'>
+          <label for='workplan' class='f6 b db mb2'>Workplan URL</label>
+          <input id='workplan' name='workplan' class='input-reset ba b--black-20 pa2 mb2 db w-100' type='url' required onchange="onChange(this.value);">
+        </div>
+        <div class='pv2'>
+          <label for='version' class='f6 b db mb2'>Release number</label>
+          <input id='version' name='version' class='input-reset ba b--black-20 pa2 mb2 db w-100' type='number' required>
+        </div>
+        <div class='pv2'>
+          <label for='instructions' class='f6 b db mb2'>Instructions for testers</label>
+          <textarea name='instructions' type='textarea' rows=5 class='pa1 w-100 b--black-20' style='resize:none;'></textarea>
+        </div>
+        <div class='pv2'>
+          <input class='b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6' type='submit' value='Create Pre-Release'>
+        </div>
+      </form>
+    </div>
+    <div id='delete-btn' class='o-0 pointer flex-none ml2 mb1 f6 black-60'>
+      <svg width='14' height='14' viewBox='0 0 24 24'>
+        <path d='M12 24C5.373 24 0 18.627 0 12S5.373 0 12 0s12 5.373 12 12-5.373 12-12 12zm-6.005-6.974l1.379 1.379 4.826-4.826 4.826 4.826 1.379-1.379-4.826-4.826 4.826-4.826-1.379-1.379-4.826 4.826-4.826-4.826-1.379 1.379 4.826 4.826-4.826 4.826z' fill='rgba(0, 0, 0, .4)' fill-rule='evenodd' />
+      </svg>
+    </div>
+    <script type='text/javascript'>
+      function onChange (value) {
+        var split = value.split('-')
+        document.getElementById('version').value = split[split.length - 1].replace(/0/g, '')
+      }
+
+      function remove () {
+        document.getElementById(this.parentElement.id + 's').removeChild(this.parentElement)
+      }
+
+      function addItem (item, parent) {
+        item = item || ''
+        var childNodes = parent.childNodes
+        var index = childNodes.length < 4 ? 1 : 3
+        var field = childNodes[index].cloneNode(true)
+        var deleteNode = document.getElementById('delete-btn').cloneNode(true)
+        deleteNode.classList.remove('o-0')
+        deleteNode.onclick = remove
+        field.appendChild(deleteNode)
+        field.childNodes[1].value = item
+        parent.appendChild(field)
+      }
+      // repo-api-01, repo-frontend, repo-infrastructure
+      // some@test.com, test@domain.ie; some@one.help
+      function onPaste (evt) {
+        evt.preventDefault()
+        evt.stopPropagation()
+        var parentElement = evt.target.parentElement
+        var clipboardData = evt.clipboardData || window.clipboardData
+        var items = clipboardData.getData('Text').replace(' ', '').split(/;|,/g)
+        var firstNode = parentElement.childNodes[1]
+        firstNode.value = items.splice(0, 1)
+        items.forEach(function (item) { addItem(item, parentElement.parentElement) })
+      }
+
+      document.getElementById('emails').onpaste = onPaste
+      document.getElementById('repos').onpaste = onPaste
+    </script>
+  </body>
+</html>
