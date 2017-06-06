@@ -11,13 +11,15 @@ const html = fs.readFileSync('./index.html').toString()
 
 function fakePayload (opts) {
   opts = opts || {}
+
   return Object.assign({
-    repoName: faker.company.companyName(),
-    emails: [faker.internet.email()],
-    deployUrl: faker.internet.url(),
-    workplanUrl: faker.internet.url(),
-    release: faker.random.number(),
-    message: faker.lorem.paragraph()
+    masterRepo: faker.company.companyName(),
+    repos: [faker.company.companyName(), faker.company.companyName()],
+    testersEmails: [faker.internet.email()],
+    deployment: faker.internet.url(),
+    workplan: faker.internet.url(),
+    version: faker.random.number(),
+    instructions: faker.lorem.paragraph()
   }, opts)
 }
 
@@ -55,7 +57,7 @@ test('everything goes well, no validation errors', async t => {
 
 test('error: schema validation', async t => {
   const url = await getUrl(service)
-  const payload = fakePayload({ workplanUrl: 'test' })
+  const payload = fakePayload({ workplan: 'test' })
   try {
     await request.post({
       uri: url,
