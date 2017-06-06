@@ -14,8 +14,8 @@ function usage () {
   console.log(`USAGE: node example/github-semver.js --repo org/repo`)
 }
 
-const { repo, version, message } = argv
-if (!repo || !version || !message) {
+const { repo } = argv
+if (!repo) {
   usage()
   process.exit(-1)
 }
