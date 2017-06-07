@@ -1,6 +1,8 @@
 import { Component } from 'react'
+import Joi from 'joi-browser'
 import { Input, Button, Textarea } from '../components'
 import UserCreateList from './user-create-list'
+import { preReleaseFormSchema } from '../schemas'
 
 const InputList = ({ name, label, tips, onRemove, onAdd, onPaste, list }) => (
   <div>
@@ -23,7 +25,6 @@ export default class PreReleaseForm extends Component {
   }
 
   onAdd = (field, item) => {
-    console.log({field, item})
     const value = [...this.state.formData[field], item]
     this.updateField(field, value)
   }
@@ -46,17 +47,23 @@ export default class PreReleaseForm extends Component {
     this.updateField(field, items)
   }
 
+  onSubmit = () => {
+    const isValid = Joi.validate(this.state.formData, preReleaseFormSchema)
+    if (isValid.error) return console.error(isValid.error)
+    console.log('OK SENDING', this.state.formData)
+  }
+
   updateField = (field, value) => {
     const formData = Object.assign({}, this.state.formData, {[field]: value})
     this.setState({ formData })
   }
 
   render () {
-    const { onChange, state, onAdd, onRemove, onPaste } = this
+    const { onChange, state, onAdd, onRemove, onPaste, onSubmit } = this
     const { masterRepo, repos, emails, deployment, workplan, version, instructions } = state.formData
     return (
       <form action='/' method='post'>
-        <Input name='masterRepo' label='Name of master repository' required onChange={onChange} value={masterRepo} />
+        <Input name='masterRepo' label='Name of master repository' required onChange={onChange} value={masterRepo} schema={preReleaseFormSchema.masterRepo} />
         <InputList name='repos' label='Other project repos' tips='optional' onAdd={onAdd} onRemove={onRemove} onPaste={onPaste} list={repos} />
         <InputList name='emails' label='Emails of testers' onAdd={onAdd} onRemove={onRemove} onPaste={onPaste} list={emails} />
         <Input name='deployment' label='Deployment URL' type='url' required onChange={onChange} value={deployment} />
@@ -64,7 +71,7 @@ export default class PreReleaseForm extends Component {
         <Input name='version' label='Release number' type='number' required onChange={onChange} value={version} />
         <Textarea name='instructions' label='Instructions for testers' onChange={onChange} value={instructions} />
         <div className='pv2'>
-          <Button value='Create Pre Release' />
+          <Button value='Create Pre Release' onClick={onSubmit} />
         </div>
       </form>
     )

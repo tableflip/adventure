@@ -11,7 +11,8 @@ const Input = (props) => (
       required={!!props.required}
       onChange={props.onChange}
       value={props.value}
-      onPaste={props.onPaste} />
+      onPaste={props.onPaste}
+      onKeyPress={props.onKeyPress} />
   </div>
 )
 
@@ -23,7 +24,8 @@ Input.propTypes = {
   required: PropTypes.bool,
   onChange: PropTypes.func.isRequired,
   value: PropTypes.string.isRequired || PropTypes.number.isRequired,
-  onPaste: PropTypes.func
+  onPaste: PropTypes.func,
+  onKeyPress: PropTypes.func
 }
 
 export default Input

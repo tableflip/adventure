@@ -16,6 +16,7 @@
   "author": "TABLEFLIP",
   "license": "ISC",
   "dependencies": {
+    "joi-browser": "^10.0.6",
     "next": "^3.0.0-beta11",
     "prop-types": "^15.5.10",
     "react": "^15.5.4",
