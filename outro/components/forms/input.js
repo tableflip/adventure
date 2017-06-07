@@ -2,7 +2,7 @@ import PropTypes from 'prop-types'
 
 const Input = (props) => (
   <div className='pv2 w-100'>
-    {props.label && <label for={props.id || props.name} className='f6 b db mb2'>{props.label}</label>}
+    {props.label && <label htmlFor={props.id || props.name} className='f6 b db mb2'>{props.label}</label>}
     <input
       id={props.id}
       name={props.name}
@@ -10,7 +10,8 @@ const Input = (props) => (
       type={props.type || 'text'}
       required={!!props.required}
       onChange={props.onChange}
-      value={props.value} />
+      value={props.value}
+      onPaste={props.onPaste} />
   </div>
 )
 
@@ -21,7 +22,8 @@ Input.propTypes = {
   type: PropTypes.string,
   required: PropTypes.bool,
   onChange: PropTypes.func.isRequired,
-  value: PropTypes.string || PropTypes.number
+  value: PropTypes.string.isRequired || PropTypes.number.isRequired,
+  onPaste: PropTypes.func
 }
 
 export default Input

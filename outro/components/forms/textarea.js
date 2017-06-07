@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types'
 
 const Textarea = (props) => (
-  <div class='pv2'>
-    {props.label && <label for={props.name} className='f6 b db mb2'>{props.label}</label>}
+  <div className='pv2'>
+    {props.label && <label htmlFor={props.name} className='f6 b db mb2'>{props.label}</label>}
     <textarea name={props.name} type='textarea' rows='5' className='pa1 w-100 b--black-20' style={{resize: 'none'}} />
   </div>
 )

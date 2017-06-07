@@ -1,6 +1,13 @@
 import { Component } from 'react'
-import { Input, Button, Textarea, IconPlus } from '../components'
+import { Input, Button, Textarea } from '../components'
 import UserCreateList from './user-create-list'
+
+const InputList = ({ name, label, tips, onRemove, onAdd, onPaste, list }) => (
+  <div>
+    <label htmlFor={name} className='f6 b db mb2'>{label}{tips && <span className='fw3 ml1'>({tips})</span>}</label>
+    <UserCreateList remove={onRemove.bind(null, name)} add={onAdd.bind(null, name)} list={list} paste={onPaste.bind(null, name)} />
+  </div>
+)
 
 export default class PreReleaseForm extends Component {
   state = {
@@ -15,22 +22,28 @@ export default class PreReleaseForm extends Component {
     }
   }
 
-  onAddRepo = (item) => {
-    const value = [...this.state.formData.repos, item]
-    this.updateField('repos', value)
+  onAdd = (field, item) => {
+    console.log({field, item})
+    const value = [...this.state.formData[field], item]
+    this.updateField(field, value)
   }
 
-  onRemoveRepo = (item) => {
-    const repos = [...this.state.formData.repos]
-    const index = repos.indexOf(item)
+  onRemove = (field, item) => {
+    const items = [...this.state.formData[field]]
+    const index = items.indexOf(item)
     if (index < 0) return console.error(`can't find ${item} in repos`)
-    repos.splice(index, 1)
-    this.updateField('repos', repos)
+    items.splice(index, 1)
+    this.updateField(field, items)
   }
 
   onChange = (e) => {
     const { name, value } = e.target
     this.updateField(name, value)
+  }
+
+  onPaste = (field, value) => {
+    const items = value.trim().replace(/\s/g, '').split(/;|,/g)
+    this.updateField(field, items)
   }
 
   updateField = (field, value) => {
@@ -39,23 +52,13 @@ export default class PreReleaseForm extends Component {
   }
 
   render () {
-    const { onChange, state, onAddRepo, onRemoveRepo } = this
-    const { masterRepo, repos, deployment, workplan, version, instructions } = state.formData
+    const { onChange, state, onAdd, onRemove, onPaste } = this
+    const { masterRepo, repos, emails, deployment, workplan, version, instructions } = state.formData
     return (
       <form action='/' method='post'>
         <Input name='masterRepo' label='Name of master repository' required onChange={onChange} value={masterRepo} />
-        <div className='pv2' id='repos'>
-          <label htmlFor='repos' className='f6 b db mb2'>Other project repos (optional)</label>
-          <UserCreateList remove={onRemoveRepo} add={onAddRepo} list={repos} />
-        </div>
-        <div className='pv2' id='emails'>
-          <label htmlFor='email' className='f6 b db mb2'>
-            Emails of testers<div className='normal black-60 ml1 dib'><IconPlus /></div>
-          </label>
-          <div id='email' className='flex items-center'>
-            <input name='emails' className='input-reset ba b--black-20 pa2 mb2 db flex-auto' type='email' required />
-          </div>
-        </div>
+        <InputList name='repos' label='Other project repos' tips='optional' onAdd={onAdd} onRemove={onRemove} onPaste={onPaste} list={repos} />
+        <InputList name='emails' label='Emails of testers' onAdd={onAdd} onRemove={onRemove} onPaste={onPaste} list={emails} />
         <Input name='deployment' label='Deployment URL' type='url' required onChange={onChange} value={deployment} />
         <Input name='workplan' label='Workplan URL' type='url' required onChange={onChange} value={workplan} />
         <Input name='version' label='Release number' type='number' required onChange={onChange} value={version} />

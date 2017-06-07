@@ -1,26 +1,27 @@
 import { Component } from 'react'
 import PropTypes from 'prop-types'
-import { IconRemove, IconPlus, Input } from '../components'
+import { IconRemove, IconPlus, Input, ListItem } from '../components'
 
 export default class UserCreateList extends Component {
   static propTypes = {
     add: PropTypes.func.isRequired,
     remove: PropTypes.func.isRequired,
-    list: PropTypes.array.isRequired
+    list: PropTypes.array.isRequired,
+    paste: PropTypes.func
   }
   render () {
-    const { add, remove, list } = this.props
+    const { add, remove, list, paste } = this.props
     return (
       <div>
-        {list.length > 0 && list.map((item) => {
+        {list.length > 0 && list.map((item, i) => {
           return (
-            <div className='flex items-center justify-start'>
+            <ListItem className='mb2' key={item._id || `${item}-${i}`}>
               <div className='flex-auto'>{item}</div>
-              <div className='flex-none ml2' onClick={() => remove(item)}><IconRemove /></div>
-            </div>
+              <div className='flex-none ml2' onClick={() => remove(item)}><IconRemove translate='0, 2' /></div>
+            </ListItem>
           )
         })}
-        <AddItem onAdd={add} />
+        <AddItem onAdd={add} onPaste={paste} />
       </div>
     )
   }
@@ -28,12 +29,20 @@ export default class UserCreateList extends Component {
 
 export class AddItem extends Component {
   static propTypes = {
-    onAdd: PropTypes.func.isRequired
+    onAdd: PropTypes.func.isRequired,
+    onPaste: PropTypes.func
   }
   state = { value: '' }
   onChange = (e) => {
     const { value } = e.target
     this.setState({ value })
+  }
+  onPaste = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (!this.props.onPaste) return
+    const clipboardData = e.clipboardData || window.clipboardData
+    this.props.onPaste(clipboardData.getData('Text'))
   }
   onClick = () => {
     const { value } = this.state
@@ -43,10 +52,10 @@ export class AddItem extends Component {
   }
   render () {
     return (
-      <div className='flex justify-end items-center w-100'>
-        <Input className='flex-auto' name='item' onChange={this.onChange} value={this.state.value} />
+      <div className='flex justify-end items-center w-100 pr2'>
+        <Input className='flex-auto' name='item' onChange={this.onChange} value={this.state.value} onPaste={this.onPaste} />
         <div className='flex-none pointer mb2' onClick={this.onClick}>
-          <span className='black-40 semibold mh2'>add item</span><IconPlus />
+          <span className='black-40 f6 semibold mh2 mr2'>add item</span><IconPlus translate='0, 2' />
         </div>
       </div>
     )
