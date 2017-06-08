@@ -1,15 +1,8 @@
 import { Component } from 'react'
 import Joi from 'joi-browser'
-import { Input, Button, Textarea } from '../components'
+import { Button, Textarea, ValidatedInput } from '../components'
 import UserCreateList from './user-create-list'
 import { preReleaseFormSchema } from '../schemas'
-
-const InputList = ({ name, label, tips, onRemove, onAdd, onPaste, list }) => (
-  <div>
-    <label htmlFor={name} className='f6 b db mb2'>{label}{tips && <span className='fw3 ml1'>({tips})</span>}</label>
-    <UserCreateList remove={onRemove.bind(null, name)} add={onAdd.bind(null, name)} list={list} paste={onPaste.bind(null, name)} />
-  </div>
-)
 
 export default class PreReleaseForm extends Component {
   state = {
@@ -48,9 +41,11 @@ export default class PreReleaseForm extends Component {
   }
 
   onSubmit = () => {
-    const isValid = Joi.validate(this.state.formData, preReleaseFormSchema)
-    if (isValid.error) return console.error(isValid.error)
-    console.log('OK SENDING', this.state.formData)
+    const { formData } = this.state
+    Joi.validate(formData, Joi.object(preReleaseFormSchema), (error, value) => {
+      if (error) return console.error(error)
+      console.log({ formData })
+    })
   }
 
   updateField = (field, value) => {
@@ -61,14 +56,52 @@ export default class PreReleaseForm extends Component {
   render () {
     const { onChange, state, onAdd, onRemove, onPaste, onSubmit } = this
     const { masterRepo, repos, emails, deployment, workplan, version, instructions } = state.formData
+
     return (
       <form action='/' method='post'>
-        <Input name='masterRepo' label='Name of master repository' required onChange={onChange} value={masterRepo} schema={preReleaseFormSchema.masterRepo} />
-        <InputList name='repos' label='Other project repos' tips='optional' onAdd={onAdd} onRemove={onRemove} onPaste={onPaste} list={repos} />
-        <InputList name='emails' label='Emails of testers' onAdd={onAdd} onRemove={onRemove} onPaste={onPaste} list={emails} />
-        <Input name='deployment' label='Deployment URL' type='url' required onChange={onChange} value={deployment} />
-        <Input name='workplan' label='Workplan URL' type='url' required onChange={onChange} value={workplan} />
-        <Input name='version' label='Release number' type='number' required onChange={onChange} value={version} />
+        <ValidatedInput
+          name='masterRepo'
+          label='Name of master repository'
+          onChange={onChange}
+          value={masterRepo}
+          autoFocus
+          schema={preReleaseFormSchema.masterRepo} />
+        <div>
+          <label htmlFor='repos' className='f6 b db mb2'>Other repos <span className='fw3 ml1'>(optional)</span></label>
+          <UserCreateList
+            remove={onRemove.bind(null, 'repos')}
+            add={onAdd.bind(null, 'repos')}
+            list={repos}
+            paste={onPaste.bind(null, 'repos')} />
+        </div>
+        <div>
+          <label htmlFor='emails' className='f6 b db mb2'>Tester's emails</label>
+          <UserCreateList
+            remove={onRemove.bind(null, 'emails')}
+            add={onAdd.bind(null, 'emails')}
+            list={emails}
+            paste={onPaste.bind(null, 'emails')}
+            schema={Joi.string().email().required()} />
+        </div>
+        <ValidatedInput
+          name='deployment'
+          label='Deployment URL'
+          onChange={onChange}
+          value={deployment}
+          schema={preReleaseFormSchema.deployment} />
+        <ValidatedInput
+          name='workplan'
+          label='Workplan URL'
+          onChange={onChange}
+          value={workplan}
+          schema={preReleaseFormSchema.workplan} />
+        <ValidatedInput
+          name='version'
+          label='Version number'
+          onChange={onChange}
+          value={version}
+          schema={preReleaseFormSchema.version}
+          validateOnChange />
         <Textarea name='instructions' label='Instructions for testers' onChange={onChange} value={instructions} />
         <div className='pv2'>
           <Button value='Create Pre Release' onClick={onSubmit} />

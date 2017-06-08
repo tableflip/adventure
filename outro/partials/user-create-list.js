@@ -1,16 +1,18 @@
 import { Component } from 'react'
 import PropTypes from 'prop-types'
-import { IconRemove, IconPlus, Input, ListItem } from '../components'
+import { IconRemove, IconPlus, Input, ListItem, ValidatedInput } from '../components'
 
 export default class UserCreateList extends Component {
   static propTypes = {
     add: PropTypes.func.isRequired,
     remove: PropTypes.func.isRequired,
     list: PropTypes.array.isRequired,
-    paste: PropTypes.func
+    paste: PropTypes.func,
+    schema: PropTypes.object,
+    validateOnChange: PropTypes.bool
   }
   render () {
-    const { add, remove, list, paste } = this.props
+    const { list, remove } = this.props
     return (
       <div>
         {list.length > 0 && list.map((item, i) => {
@@ -21,7 +23,7 @@ export default class UserCreateList extends Component {
             </ListItem>
           )
         })}
-        <AddItem onAdd={add} onPaste={paste} />
+        <AddItem {...this.props} />
       </div>
     )
   }
@@ -29,8 +31,10 @@ export default class UserCreateList extends Component {
 
 export class AddItem extends Component {
   static propTypes = {
-    onAdd: PropTypes.func.isRequired,
-    onPaste: PropTypes.func
+    add: PropTypes.func.isRequired,
+    paste: PropTypes.func,
+    schema: PropTypes.object,
+    validateOnChange: PropTypes.bool
   }
   state = { value: '' }
   onChange = (e) => {
@@ -40,23 +44,32 @@ export class AddItem extends Component {
   onPaste = (e) => {
     e.preventDefault()
     e.stopPropagation()
-    if (!this.props.onPaste) return
+    if (!this.props.paste) return
     const clipboardData = e.clipboardData || window.clipboardData
     this.props.onPaste(clipboardData.getData('Text'))
   }
   onClick = () => {
     const { value } = this.state
     if (value === '') return console.error('no value!')
-    this.props.onAdd(this.state.value)
+    this.props.add(this.state.value)
     this.setState({ value: '' })
   }
   onKeyPress = (e) => {
     if (e.key === 'Enter' || e.key === 'Tab') this.onClick()
   }
   render () {
+    const { schema, validateOnChange } = this.props
+    const inputProps = {
+      className: 'flex-auto',
+      name: 'item',
+      onChange: this.onChange,
+      value: this.state.value,
+      onPaste: this.onPaste,
+      onKeyPress: this.onKeyPress
+    }
     return (
       <div className='flex justify-end items-center w-100 pr2'>
-        <Input className='flex-auto' name='item' onChange={this.onChange} value={this.state.value} onPaste={this.onPaste} onKeyPress={this.onKeyPress} />
+        {this.props.schema ? <ValidatedInput schema={schema} validateOnChange={validateOnChange} {...inputProps} /> : <Input {...inputProps} />}
         <div className='flex-none pointer mb2' onClick={this.onClick}>
           <span className='black-40 f6 semibold mh2 mr2'>add item</span><IconPlus translate='0, 2' />
         </div>

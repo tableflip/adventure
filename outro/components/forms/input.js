@@ -6,13 +6,14 @@ const Input = (props) => (
     <input
       id={props.id}
       name={props.name}
-      className={`input-reset ba b--black-20 pa2 mb2 db w-100 ${props.className || ''}`}
+      className={`input-reset ba b--black-20 pa2 mb2 db w-100 outline-0 ${props.className || ''}`}
       type={props.type || 'text'}
       required={!!props.required}
       onChange={props.onChange}
       value={props.value}
       onPaste={props.onPaste}
-      onKeyPress={props.onKeyPress} />
+      onBlur={props.onBlur}
+      autoFocus={props.autoFocus} />
   </div>
 )
 
@@ -25,7 +26,7 @@ Input.propTypes = {
   onChange: PropTypes.func.isRequired,
   value: PropTypes.string.isRequired || PropTypes.number.isRequired,
   onPaste: PropTypes.func,
-  onKeyPress: PropTypes.func
+  onBlur: PropTypes.func
 }
 
 export default Input
