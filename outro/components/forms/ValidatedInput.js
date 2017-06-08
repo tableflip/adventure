@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import { Component } from 'react'
-import Input from './Input'
+import Input from './input'
 
 export default class ValidatedInput extends Component {
   static propTypes = {

@@ -1,4 +1,4 @@
-import Svg from './Svg'
+import Svg from './svg'
 
 export default (props) => (
   <Svg {...props}>
