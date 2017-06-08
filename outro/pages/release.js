@@ -8,13 +8,17 @@ export default class ReleasePage extends Component {
     const formData = window.localStorage.getItem('adventuredformdata')
     if (formData) this.setState({ formData: JSON.parse(formData) })
   }
+  onSubmit ({ formData }) {
+    console.log({formData})
+    window.location = '/thanks'
+  }
   render () {
     return (
       <div>
         <Head title='Pre release adventure' />
         <div className='measure-wide center pt4'>
           <div className='f1 lh-title pv4'>Release</div>
-          <ReleaseForm formData={this.state.formData} />
+          <ReleaseForm formData={this.state.formData} onSubmit={this.onSubmit} />
         </div>
       </div>
     )
