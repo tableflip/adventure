@@ -81,7 +81,7 @@ export default class PreReleaseForm extends Component {
             add={onAdd.bind(null, 'emails')}
             list={emails}
             paste={onPaste.bind(null, 'emails')}
-            schema={Joi.string().email()} />
+            schema={Joi.string().email().allow('')} />
         </div>
         <ValidatedInput
           name='deployment'
