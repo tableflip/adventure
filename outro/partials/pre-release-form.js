@@ -25,7 +25,7 @@ export default class PreReleaseForm extends Component {
   onRemove = (field, item) => {
     const items = [...this.state.formData[field]]
     const index = items.indexOf(item)
-    if (index < 0) return console.error(`can't find ${item} in repos`)
+    if (index < 0) return console.error(`can not find ${item} in repos`)
     items.splice(index, 1)
     this.updateField(field, items)
   }
@@ -75,13 +75,13 @@ export default class PreReleaseForm extends Component {
             paste={onPaste.bind(null, 'repos')} />
         </div>
         <div>
-          <label htmlFor='emails' className='f6 b db mb2'>Tester's emails</label>
+          <label htmlFor='emails' className='f6 b db mb2'>Testers emails</label>
           <UserCreateList
             remove={onRemove.bind(null, 'emails')}
             add={onAdd.bind(null, 'emails')}
             list={emails}
             paste={onPaste.bind(null, 'emails')}
-            schema={Joi.string().email().required()} />
+            schema={Joi.string().email()} />
         </div>
         <ValidatedInput
           name='deployment'

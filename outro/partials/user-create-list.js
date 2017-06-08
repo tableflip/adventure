@@ -55,7 +55,13 @@ export class AddItem extends Component {
     this.setState({ value: '' })
   }
   onKeyPress = (e) => {
-    if (e.key === 'Enter' || e.key === 'Tab') this.onClick()
+    if (e.key !== 'Enter' || e.key !== 'Tab') return
+
+    if (!this.props.schema) return this.onClick()
+
+    this.props.schema.validate(this.state.value, (err, value) => {
+      if (!err) this.onClick()
+    })
   }
   render () {
     const { schema, validateOnChange } = this.props
@@ -69,7 +75,7 @@ export class AddItem extends Component {
     }
     return (
       <div className='flex justify-end items-center w-100 pr2'>
-        {this.props.schema ? <ValidatedInput schema={schema} validateOnChange={validateOnChange} {...inputProps} /> : <Input {...inputProps} />}
+        {schema ? <ValidatedInput schema={schema} validateOnChange={validateOnChange} {...inputProps} /> : <Input {...inputProps} />}
         <div className='flex-none pointer mb2' onClick={this.onClick}>
           <span className='black-40 f6 semibold mh2 mr2'>add item</span><IconPlus translate='0, 2' />
         </div>

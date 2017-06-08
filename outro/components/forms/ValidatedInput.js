@@ -13,7 +13,7 @@ export default class ValidatedInput extends Component {
   }
 
   onChange = (e) => {
-    if (!this.props.validateOnChange) return this.props.onChange(e)
+    // if (!this.props.validateOnChange) return this.props.onChange(e)
 
     this.props.schema.validate(e.target.value, (error, value) => {
       this.setState({ error })
@@ -28,11 +28,16 @@ export default class ValidatedInput extends Component {
     })
   }
 
+  onFocus = (e) => {
+    if (this.props.validateOnChange) return
+    this.setState({ error: null })
+  }
+
   render () {
-    const { onBlur, onChange } = this
+    const { onBlur, onChange, onFocus } = this
     const { error } = this.state
     const className = error ? 'b--dark-red' : ''
-    const extendedProps = Object.assign({}, this.props, { onBlur, onChange, className })
+    const extendedProps = Object.assign({}, this.props, { onBlur, onChange, onFocus, className })
     return (
       <div className='w-100'>
         <Input {...extendedProps} />
