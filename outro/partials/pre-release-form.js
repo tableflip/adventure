@@ -69,6 +69,7 @@ export default class PreReleaseForm extends Component {
         <div>
           <label htmlFor='repos' className='f6 b db mb2'>Other repos <span className='fw3 ml1'>(optional)</span></label>
           <UserCreateList
+            name='repos'
             remove={onRemove.bind(null, 'repos')}
             add={onAdd.bind(null, 'repos')}
             list={repos}
@@ -77,31 +78,34 @@ export default class PreReleaseForm extends Component {
         <div>
           <label htmlFor='emails' className='f6 b db mb2'>Testers emails</label>
           <UserCreateList
+            name='emails'
             remove={onRemove.bind(null, 'emails')}
             add={onAdd.bind(null, 'emails')}
             list={emails}
             paste={onPaste.bind(null, 'emails')}
-            schema={Joi.string().email().allow('')} />
+            schema={Joi.string().email().allow('')}
+            minValidationLength={7} />
         </div>
         <ValidatedInput
           name='deployment'
           label='Deployment URL'
           onChange={onChange}
           value={deployment}
-          schema={preReleaseFormSchema.deployment} />
+          schema={preReleaseFormSchema.deployment}
+          minValidationLength={7} />
         <ValidatedInput
           name='workplan'
           label='Workplan URL'
           onChange={onChange}
           value={workplan}
-          schema={preReleaseFormSchema.workplan} />
+          schema={preReleaseFormSchema.workplan}
+          minValidationLength={7} />
         <ValidatedInput
           name='version'
           label='Version number'
           onChange={onChange}
           value={version}
-          schema={preReleaseFormSchema.version}
-          validateOnChange />
+          schema={preReleaseFormSchema.version} />
         <Textarea name='instructions' label='Instructions for testers' onChange={onChange} value={instructions} />
         <div className='pv2'>
           <Button value='Create Pre Release' onClick={onSubmit} />

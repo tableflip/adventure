@@ -5,7 +5,7 @@ import Input from './input'
 export default class ValidatedInput extends Component {
   static propTypes = {
     schema: PropTypes.object.isRequired,
-    validateOnChange: PropTypes.bool
+    minValidationLength: PropTypes.number
   }
 
   state = {
@@ -13,7 +13,8 @@ export default class ValidatedInput extends Component {
   }
 
   onChange = (e) => {
-    // if (!this.props.validateOnChange) return this.props.onChange(e)
+    const { minValidationLength = 1 } = this.props
+    if (e.target.value.length <= minValidationLength) return this.props.onChange(e)
 
     this.props.schema.validate(e.target.value, (error, value) => {
       this.setState({ error })
@@ -29,7 +30,6 @@ export default class ValidatedInput extends Component {
   }
 
   onFocus = (e) => {
-    if (this.props.validateOnChange) return
     this.setState({ error: null })
   }
 

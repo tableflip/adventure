@@ -9,7 +9,7 @@ export default class UserCreateList extends Component {
     list: PropTypes.array.isRequired,
     paste: PropTypes.func,
     schema: PropTypes.object,
-    validateOnChange: PropTypes.bool
+    minValidationLength: PropTypes.number
   }
   render () {
     const { list, remove } = this.props
@@ -31,10 +31,11 @@ export default class UserCreateList extends Component {
 
 export class AddItem extends Component {
   static propTypes = {
+    name: PropTypes.string.isRequired,
     add: PropTypes.func.isRequired,
     paste: PropTypes.func,
     schema: PropTypes.object,
-    validateOnChange: PropTypes.bool
+    minValidationLength: PropTypes.number
   }
   state = { value: '' }
   onChange = (e) => {
@@ -55,19 +56,18 @@ export class AddItem extends Component {
     this.setState({ value: '' })
   }
   onKeyPress = (e) => {
-    if (e.key !== 'Enter' || e.key !== 'Tab') return
-
-    if (!this.props.schema) return this.onClick()
-
-    this.props.schema.validate(this.state.value, (err, value) => {
-      if (!err) this.onClick()
-    })
+    if (e.key === 'Enter' || e.key === 'Tab') {
+      if (!this.props.schema) return this.onClick()
+      this.props.schema.validate(this.state.value, (err) => {
+        if (!err) this.onClick()
+      })
+    }
   }
   render () {
-    const { schema, validateOnChange } = this.props
+    const { schema, minValidationLength, name } = this.props
     const inputProps = {
       className: 'flex-auto',
-      name: 'item',
+      name,
       onChange: this.onChange,
       value: this.state.value,
       onPaste: this.onPaste,
@@ -75,7 +75,7 @@ export class AddItem extends Component {
     }
     return (
       <div className='flex justify-end items-center w-100 pr2'>
-        {schema ? <ValidatedInput schema={schema} validateOnChange={validateOnChange} {...inputProps} /> : <Input {...inputProps} />}
+        {schema ? <ValidatedInput schema={schema} minValidationLength={minValidationLength} {...inputProps} /> : <Input {...inputProps} />}
         <div className='flex-none pointer mb2' onClick={this.onClick}>
           <span className='black-40 f6 semibold mh2 mr2'>add item</span><IconPlus translate='0, 2' />
         </div>
