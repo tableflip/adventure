@@ -8,5 +8,6 @@ export { default as ValidatedInput } from './forms/validatedinput'
 // Icons
 export { default as IconRemove } from './icons/remove'
 export { default as IconPlus } from './icons/plus'
+export { default as IconTableflip } from './icons/tableflip' 
 // Lists
 export { default as ListItem } from './lists/listitem'

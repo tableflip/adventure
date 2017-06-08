@@ -2,19 +2,22 @@ import { Component } from 'react'
 import Joi from 'joi-browser'
 import { Button, Textarea, ValidatedInput } from '../components'
 import UserCreateList from './user-create-list'
-import { preReleaseFormSchema } from '../schemas'
+import { releaseFormSchema } from '../schemas'
 
-export default class PreReleaseForm extends Component {
+export default class ReleaseForm extends Component {
   state = {
     formData: {
       masterRepo: '',
       repos: [],
-      emails: [],
       deployment: '',
       workplan: '',
-      version: '',
-      instructions: ''
+      version: ''
     }
+  }
+
+  componentWillReceiveProps (props) {
+    const { masterRepo, repos, deployment, workplan, version } = props.formData
+    this.setState({ formData: { masterRepo, repos, deployment, workplan, version } })
   }
 
   onAdd = (field, item) => {
@@ -42,9 +45,9 @@ export default class PreReleaseForm extends Component {
 
   onSubmit = () => {
     const { formData } = this.state
-    Joi.validate(formData, Joi.object(preReleaseFormSchema), (error, value) => {
+    Joi.validate(formData, Joi.object(releaseFormSchema), (error, value) => {
       if (error) return console.error(error)
-      this.props.onSubmit({ formData })
+      console.log({ formData })
     })
   }
 
@@ -56,6 +59,7 @@ export default class PreReleaseForm extends Component {
   render () {
     const { onChange, state, onAdd, onRemove, onPaste, onSubmit } = this
     const { masterRepo, repos, emails, deployment, workplan, version, instructions } = state.formData
+    console.log({repos})
 
     return (
       <form action='/' method='post'>
@@ -65,50 +69,40 @@ export default class PreReleaseForm extends Component {
           onChange={onChange}
           value={masterRepo}
           autoFocus
-          schema={preReleaseFormSchema.masterRepo} />
-        <div>
-          <label htmlFor='repos' className='f6 b db mb2'>Other repos <span className='fw3 ml1'>(optional)</span></label>
-          <UserCreateList
-            name='repos'
-            remove={onRemove.bind(null, 'repos')}
-            add={onAdd.bind(null, 'repos')}
-            list={repos}
-            paste={onPaste.bind(null, 'repos')} />
-        </div>
-        <div>
-          <label htmlFor='emails' className='f6 b db mb2'>Testers emails</label>
-          <UserCreateList
-            name='emails'
-            remove={onRemove.bind(null, 'emails')}
-            add={onAdd.bind(null, 'emails')}
-            list={emails}
-            paste={onPaste.bind(null, 'emails')}
-            schema={Joi.string().email().allow('')}
-            minValidationLength={7} />
-        </div>
+          schema={releaseFormSchema.masterRepo} />
+        {repos.length > 0 && (
+          <div>
+            <label htmlFor='repos' className='f6 b db mb2'>Other repos <span className='fw3 ml1'>(optional)</span></label>
+            <UserCreateList
+              name='repos'
+              remove={onRemove.bind(null, 'repos')}
+              add={onAdd.bind(null, 'repos')}
+              list={repos}
+              paste={onPaste.bind(null, 'repos')} />
+          </div>
+        )}
         <ValidatedInput
           name='deployment'
           label='Deployment URL'
           onChange={onChange}
           value={deployment}
-          schema={preReleaseFormSchema.deployment}
+          schema={releaseFormSchema.deployment}
           minValidationLength={7} />
         <ValidatedInput
           name='workplan'
           label='Workplan URL'
           onChange={onChange}
           value={workplan}
-          schema={preReleaseFormSchema.workplan}
+          schema={releaseFormSchema.workplan}
           minValidationLength={7} />
         <ValidatedInput
           name='version'
           label='Version number'
           onChange={onChange}
           value={version}
-          schema={preReleaseFormSchema.version} />
-        <Textarea name='instructions' label='Instructions for testers' onChange={onChange} value={instructions} />
+          schema={releaseFormSchema.version} />
         <div className='pv2'>
-          <Button value='Create Pre Release' onClick={onSubmit} />
+          <Button value='Release' onClick={onSubmit} />
         </div>
       </form>
     )
