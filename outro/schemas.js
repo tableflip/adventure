@@ -1,10 +1,12 @@
 import Joi from 'joi-browser'
 
+const semverRegex = /\bv?(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-[\da-z\-]+(?:\.[\da-z\-]+)*)?(?:\+[\da-z\-]+(?:\.[\da-z\-]+)*)?\b/ig
+
 const preReleaseFormVersionErrorMessage = {
   language: {
     string: {
       regex: {
-        base: 'Please use a valid semver format i.e. 1.2.3'
+        base: 'Please use a valid semver format i.e. 1.2.3 or v1.2.3-beta'
       }
     }
   }
@@ -16,6 +18,6 @@ export const preReleaseFormSchema = {
   emails: Joi.array().items(Joi.string().email()).min(1).required().label('Tester\'s emails'),
   deployment: Joi.string().uri().required().label('Deployment URL'),
   workplan: Joi.string().uri().required().label('Workplan URL'),
-  version: Joi.string().regex(/(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)/).label('Version number').options(preReleaseFormVersionErrorMessage),
+  version: Joi.string().regex(semverRegex).label('Version number').options(preReleaseFormVersionErrorMessage),
   instructions: Joi.string().label('Instructions for testers')
 }
