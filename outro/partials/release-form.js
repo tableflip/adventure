@@ -47,7 +47,7 @@ export default class ReleaseForm extends Component {
     const { formData } = this.state
     Joi.validate(formData, Joi.object(releaseFormSchema), (error, value) => {
       if (error) return console.error(error)
-      console.log({ formData })
+      this.props.onSubmit(formData)
     })
   }
 

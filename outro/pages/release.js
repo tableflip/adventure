@@ -8,8 +8,9 @@ export default class ReleasePage extends Component {
     const formData = window.localStorage.getItem('adventuredformdata')
     if (formData) this.setState({ formData: JSON.parse(formData) })
   }
-  onSubmit ({ formData }) {
+  onSubmit (formData) {
     console.log({formData})
+    window.localStorage.removeItem('adventuredformdata')
     window.location = '/thanks'
   }
   render () {
