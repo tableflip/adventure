@@ -1,12 +1,14 @@
 /*
 github-interface-cli
 
-Make sure you've got a github.rc in the project root with your username and an api key.
+Make sure you've got a .githubrc in the project root with your username and an personal access token.
 
 USAGE:
   node example/github-interface-cli.js --repo olizilla/tags --version v2.0.0 --message "good one"
 
 */
+const arrayify = require('arrayify')
+const semverRegex = require('semver-regex')
 const {prerelease} = require('../lib/github-interface')
 const argv = require('minimist')(process.argv.slice(2))
 
@@ -20,10 +22,9 @@ if (!repo || !version || !message) {
   process.exit(-1)
 }
 
-let repos = repo
-if (!Array.isArray(repos)) {
-  repos = [repo]
-}
+if (!semverRegex().test(version)) throw new Error('version must be a valid semver')
+
+repos = arrayify(repo)
 
 prerelease({repos, version, message})
   .then(() => {
