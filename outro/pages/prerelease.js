@@ -1,14 +1,13 @@
 import { Component } from 'react'
 import { Head } from '../components'
 import PreReleaseForm from '../partials/pre-release-form'
+import fetch from 'isomorphic-fetch'
 
 export default class PreReleasePage extends Component {
-  componentDidMount () {
-    window.localStorage.removeItem('adventuredformdata')
-  }
   onSubmit = ({ formData }) => {
-    window.localStorage.setItem('adventuredformdata', JSON.stringify(formData))
-    window.location = '/thanks'
+    fetch(`/?formdata=${btoa(JSON.stringify(formData))}`)
+      .then((res) => window.location = '/thanks')
+      .catch((err) => console.error(err))
   }
   render () {
     return (
