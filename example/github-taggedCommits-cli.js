@@ -1,10 +1,10 @@
 /*
-github-pulls-cli
+github-taggedCommits-cli
 
 Make sure you've got a .githubrc in the project root with your username and an personal access token.
 
 USAGE:
-  node example/github-release-stats-cli.js --repo olizilla/tags --version v2.0.0
+  node example/github-taggedCommits-stats-cli.js --repo olizilla/tags --version v2.0.0
 
 */
 const {getPullRequests} = require('../lib/github-interface')
@@ -25,7 +25,7 @@ if (!Array.isArray(repos)) {
   repos = [repo]
 }
 
-getPullRequests({repos, version})
+getTaggedCommits({repos, version})
   .then(() => {
     console.log(`ok pulls done`)
   })
