@@ -6,6 +6,9 @@
   "scripts": {
     "test": "standard"
   },
+  "bin": {
+    "github-cli": "github-cli/index.js"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
