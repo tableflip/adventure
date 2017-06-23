@@ -4,15 +4,15 @@ github-tester-feedback-cli
 Make sure you've got a .githubrc in the project root with your username and an api key.
 
 USAGE:
-  github-cli tester-feedback --repo alanshaw/tester-feedback --version v1.0.0
+  adventure-cli tester-feedback --repo alanshaw/tester-feedback --version v1.0.0
 
 */
 
-module.exports = function (argv) {
-  const { getTesterFeedback } = require('../lib/github-interface')
+const { getTesterFeedback } = require('../lib/github-interface')
 
+module.exports = function (argv) {
   function usage () {
-    console.log(`USAGE: github-cli tester-feedback --repo org/repo --version v1.0.0`)
+    console.log(`USAGE: github-cli tester-feedback [ --repo org/repo ] --version v1.0.0`)
   }
 
   const { repo, version } = argv

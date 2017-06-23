@@ -30,7 +30,7 @@ function showUsage () {
   console.log(`github-cli prerelease --repo org/repo --version v1.0.0`)
   console.log(`github-cli release-stats --repo org/repo --version v1.0.0`)
   console.log(`github-cli tester-feedback --repo org/repo --version v1.0.0`)
-  process.exit(0)
+  process.exit(-1)
 }
 
 if (!argv._ || argv._.length !== 1) showUsage()

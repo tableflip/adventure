@@ -4,20 +4,46 @@ github-prerelease-cli
 Make sure you've got a .githubrc in the project root with your username and an personal access token.
 
 USAGE:
-  github-cli prerelease --repo olizilla/tags --version v2.0.0 --message "good one"
+  adventure-cli prerelease --repo olizilla/tags --version v2.0.0 --message "good one"
 
 */
 
-module.exports = function (argv) {
-  const arrayify = require('arrayify')
-  const semverRegex = require('semver-regex')
-  const {prerelease} = require('../lib/github-interface')
+const arrayify = require('arrayify')
+const Text = require('prompt-text')
+const semverRegex = require('semver-regex')
+
+module.exports = async function (argv) {
+  const {getVersion, prerelease} = require('../lib/github-interface')
 
   function usage () {
-    console.log(`USAGE: github-cli prerelease --repo org/repo --version v2.0.0 --message 'Best release ever'`)
+    console.log(`USAGE: github-cli prerelease [ --repo org/repo ] [ --version v2.0.0 ] [ --message 'Best release ever' ]`)
   }
 
   let { repo, version, message } = argv
+
+  if (!version) {
+    const currentVersion = await getVersion({ repo })
+
+    const text = new Text({
+      name: 'version',
+      message: `Version to release [${currentVersion}]`
+    })
+    version = await text.run()
+    if (!version) version = currentVersion
+  }
+
+  if (!message) {
+    const text = new Text({
+      name: 'message',
+      message: 'Release message'
+    })
+    message = await text.run()
+    if (!message) {
+      console.error('You must supply a release message')
+      process.exit(1)
+    }
+  }
+
   if (!repo || !version || !message) {
     usage()
     process.exit(-1)
@@ -35,7 +61,7 @@ module.exports = function (argv) {
       console.log(`Check it out: ${url}`)
     })
     .catch((err) => {
-      console.error(err)
+      console.error(err.message)
       process.exit(-1)
     })
 }

@@ -4,15 +4,15 @@ github-release-stats-cli
 Make sure you've got a .githubrc in the project root with your username and an personal access token.
 
 USAGE:
-  github-cli release-stats --repo olizilla/tags --version v2.0.0
+  adventure-cli release-stats --repo olizilla/tags --version v2.0.0
 
 */
 
-module.exports = function (argv) {
-  const {releaseStats} = require('../lib/github-interface')
+const {releaseStats} = require('../lib/github-interface')
 
+module.exports = function (argv) {
   function usage () {
-    console.log(`USAGE: github-cli release-stats --repo org/repo --version v2.0.0`)
+    console.log(`USAGE: github-cli release-stats [ --repo org/repo ] --version v2.0.0`)
   }
 
   const { repo, version } = argv

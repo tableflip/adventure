@@ -4,16 +4,17 @@ github-semver-cli
 Make sure you've got a .githubrc in the project root with your username and an api key.
 
 USAGE:
-  github-cli semver --repo olizilla/tags --bump major
-  github-cli semver --repo olizilla/tags --version 2.0.0
+  adventure-cli semver --repo olizilla/tags --bump major
+  adventure-cli semver --repo olizilla/tags --version 2.0.0
 */
-module.exports = function (argv) {
-  const {getVersion, bumpVersion, setVersion} = require('../lib/github-interface')
 
+const {getVersion, bumpVersion, setVersion} = require('../lib/github-interface')
+
+module.exports = function (argv) {
   function usage () {
     console.log('USAGE:')
-    console.log('  github-cli semver --repo org/repo --bump major|minor|patch')
-    console.log('  github-cli semver --repo org/repo --version 2.0.0')
+    console.log('  github-cli semver [ --repo org/repo ] --bump major|minor|patch')
+    console.log('  github-cli semver [ --repo org/repo ] --version 2.0.0')
   }
 
   const { repo, bump, version } = argv
