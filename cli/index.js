@@ -1,4 +1,6 @@
 #! /usr/bin/env node
+const { getRepo } = require('../lib/github-utils')
+
 const commands = {
   prerelease: require('./github-prerelease-cli'),
   'release-stats': require('./github-release-stats-cli'),
@@ -6,23 +8,6 @@ const commands = {
   'tester-feedback': require('./github-tester-feedback-cli')
 }
 const argv = require('minimist')(process.argv.slice(2))
-
-const githubUrlRegex = /^git@github\.com:(.+)\.git$/
-
-function getRepo () {
-  const git = require('simple-git')(process.cwd())
-  return new Promise((resolve, reject) => {
-    git.getRemotes(true, (err, remotes) => {
-      if (err) return reject(err)
-
-      const origin = remotes.find(({ name }) => name === 'origin')
-      if (!origin) return reject('No origin specified on repo')
-
-      const decomposed = githubUrlRegex.exec(origin.refs.fetch)
-      resolve(decomposed[1])
-    })
-  })
-}
 
 function showUsage () {
   console.log('USAGE:')
