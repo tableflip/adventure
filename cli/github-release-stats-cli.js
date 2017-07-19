@@ -27,8 +27,8 @@ module.exports = function (argv) {
   }
 
   releaseStats({repos, version})
-    .then(({ commits, additions, deletions }) => {
-      console.log(`This release saw ${commits} commits, with ${additions} lines of code added and ${deletions} removed across all the supplied repos`)
+    .then(({ commits, additions, deletions, files }) => {
+      console.log(`This release saw ${commits} commits, with ${additions} lines of code added and ${deletions} removed in ${files} files across all the supplied repos`)
     })
     .catch((err) => {
       console.error(err)

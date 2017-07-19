@@ -22,14 +22,23 @@ module.exports = async function (argv) {
   let { repo, version, message } = argv
 
   if (!version) {
-    const currentVersion = await getVersion({ repo })
+    let currentVersion
+    try {
+      currentVersion = await getVersion({ repo })
+    } catch (err) {
+      currentVersion = null
+    }
 
     const text = new Text({
       name: 'version',
-      message: `Version to release [${currentVersion}]`
+      message: `Version to release [${currentVersion || 'unknown'}]`
     })
     version = await text.run()
     if (!version) version = currentVersion
+    if (!version) {
+      console.error('Cannot infer version from repo - you need to specify a version to release')
+      process.exit(1)
+    }
   }
 
   if (!message) {

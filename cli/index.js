@@ -1,13 +1,32 @@
 #! /usr/bin/env node
-const { getRepo } = require('../lib/github-utils')
-
+const yargs = require('yargs')
+const getArguments = require('./get-arguments')
 const commands = {
   prerelease: require('./github-prerelease-cli'),
   'release-stats': require('./github-release-stats-cli'),
   semver: require('./github-semver-cli'),
   'tester-feedback': require('./github-tester-feedback-cli')
 }
-const argv = require('minimist')(process.argv.slice(2))
+
+yargs
+  .command('semver', 'Update the remote package JSON with a new version', (yargs) => {
+    yargs
+      .option('repo', {
+        describe: 'Repo in the format USER/REPO'
+      })
+      .option('version', {
+        describe: 'New version'
+      })
+      .option('bump', {
+        describe: 'Update to make [major/minor/patch]'
+      })
+  }, async (args) => {
+    const required = ['repo']
+    if (!args.version) required.push('bump')
+    const allArgs = await getArguments(args, required)
+    commands.semver(allArgs)
+  })
+  .argv
 
 function showUsage () {
   console.log('USAGE:')
@@ -16,19 +35,4 @@ function showUsage () {
   console.log(`github-cli release-stats --repo org/repo --version v1.0.0`)
   console.log(`github-cli tester-feedback --repo org/repo --version v1.0.0`)
   process.exit(-1)
-}
-
-if (!argv._ || argv._.length !== 1) showUsage()
-
-const command = commands[argv._[0]]
-if (!command) showUsage()
-
-if (argv.repo) {
-  command(argv)
-} else {
-  getRepo()
-    .then((repo) => {
-      command(Object.assign({}, argv, { repo }))
-    })
-    .catch((err) => console.error(err))
 }

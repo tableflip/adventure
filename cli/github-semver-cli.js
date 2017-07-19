@@ -7,21 +7,31 @@ USAGE:
   adventure-cli semver --repo olizilla/tags --bump major
   adventure-cli semver --repo olizilla/tags --version 2.0.0
 */
+const Text = require('prompt-text')
 
 const {getVersion, bumpVersion, setVersion} = require('../lib/github-interface')
 
-module.exports = function (argv) {
-  function usage () {
-    console.log('USAGE:')
-    console.log('  github-cli semver [ --repo org/repo ] --bump major|minor|patch')
-    console.log('  github-cli semver [ --repo org/repo ] --version 2.0.0')
-  }
+module.exports = async function (argv) {
+  let { repo, bump, version } = argv
 
-  const { repo, bump, version } = argv
+  if (!version && !bump) {
+    let currentVersion
+    try {
+      currentVersion = await getVersion({ repo })
+    } catch (err) {
+      currentVersion = null
+    }
 
-  if (!repo || (!bump && !version)) {
-    usage()
-    process.exit(-1)
+    const text = new Text({
+      name: 'version',
+      message: `Version to release [current version is ${currentVersion || 'unknown'}]`
+    })
+    version = await text.run()
+    if (!version) version = currentVersion
+    if (!version) {
+      console.error('Cannot infer version from repo - you need to specify a version to release')
+      process.exit(1)
+    }
   }
 
   if (version) {
