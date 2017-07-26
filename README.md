@@ -27,3 +27,17 @@ docker run -p 4000:3000 adventure-web
 - https://docs.docker.com/get-started/part2/#build-the-app
 - https://github.com/nodejs/docker-node
 - https://github.com/nodejs/docker-node/blob/master/docs/BestPractices.md
+
+**CLI**
+
+* add a .githubrc to the project or your home directory (better)
+
+Then either:
+
+* make this repo a dev-dependency in your project
+* add a run script like "adventure-cli": "adventure-cli"
+* then you can do npm run adventure-cli, for options
+
+Or:
+
+* install globally and use adventure-cli directly.
