@@ -1,39 +1,6 @@
-/*
-github-semver-cli
+const { getVersion, bumpVersion, setVersion } = require('../lib/github-interface')
 
-Make sure you've got a .githubrc in the project root with your username and an api key.
-
-USAGE:
-  adventure-cli semver --repo olizilla/tags --bump major
-  adventure-cli semver --repo olizilla/tags --version 2.0.0
-*/
-const Text = require('prompt-text')
-
-const {getVersion, bumpVersion, setVersion} = require('../lib/github-interface')
-
-module.exports = async function (argv) {
-  let { repo, bump, version } = argv
-
-  if (!version && !bump) {
-    let currentVersion
-    try {
-      currentVersion = await getVersion({ repo })
-    } catch (err) {
-      currentVersion = null
-    }
-
-    const text = new Text({
-      name: 'version',
-      message: `Version to release [current version is ${currentVersion || 'unknown'}]`
-    })
-    version = await text.run()
-    if (!version) version = currentVersion
-    if (!version) {
-      console.error('Cannot infer version from repo - you need to specify a version to release')
-      process.exit(1)
-    }
-  }
-
+module.exports = async function ({ repo, bump, version }) {
   if (version) {
     setVersion({ repo, version })
       .then(() => {

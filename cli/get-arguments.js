@@ -1,12 +1,13 @@
 const inquirer = require('inquirer')
+const semverRegex = require('semver-regex')
 const { getRepo } = require('../lib/git-utils')
-const { getVersion } = require('../lib/github-interface')
+const { getVersion, getTags } = require('../lib/github-interface')
 
 const makeFields = (args) => ({
   repos: {
     name: 'repos',
     type: 'input',
-    message: 'Please specify repo(s) (comma-delimited):',
+    message: 'Repo(s) (comma-delimited):',
     filter: (response) => {
       return response.split(',').map((repo) => repo.trim())
     },
@@ -15,7 +16,24 @@ const makeFields = (args) => ({
   version: {
     name: 'version',
     type: 'input',
-    message: 'Version number (use semver):'
+    message: 'Version number (use semver):',
+    default: args.currentVersion,
+    validate: (version) => {
+      return semverRegex().test(version)
+        ? true
+        : 'version must be a valid semver'
+    },
+    filter: (version) => {
+      return (version[0] === 'v') 
+        ? version
+        : `v${version}`      
+    }
+  },
+  tag: {
+    name: 'tag',
+    type: 'input',
+    message: 'Release tag:',
+    default: args.latestTag
   },
   bump: {
     name: 'bump',
@@ -30,27 +48,39 @@ const makeFields = (args) => ({
   }
 })
 
-function getArguments (args, required) {
-  const getRepos = (required.includes('repos') && !args.repos)
-    ? getRepo()
-      .then((localRepo) => Object.assign({}, args, { localRepo }))
-      .then((args) => getArgument(args, 'repos'))
-      .catch(() => getArgument(args, 'repos'))
-    : Promise.resolve(args)
+async function getArguments (args, required) {
+  function fetchRepos (args) {
+    return (required.includes('repos') && !args.repos)
+      ? getRepo()
+        .then((localRepo) => Object.assign({}, args, { localRepo }))
+        .then((args) => getArgument(args, 'repos'))
+        .catch(() => getArgument(args, 'repos'))
+      : Promise.resolve(args)
+  }
 
-  required = required.filter((arg) => arg !== 'repos')
+  function fetchTag (args) {
+    return (required.includes('tag') && !args.tag)
+      ? getTags({ repo: args.repos[0] })
+        .then((tags) => Object.assign({}, args, { latestTag: tags[0] }))
+        .then((args) => getArgument(args, 'tag'))
+        .catch((err) => { console.log(err); return getArgument(args, 'tag') })
+      : Promise.resolve(args)
+  }
 
-  return getRepos
-    .then((args) => {
-      return getVersion({ repo: args.repos[0] })
-        .then((currentVersion) => Object.assign({}, args, { currentVersion }))
-        .catch((err) => { console.log(err); return args })
-    })
-    .then((args) => {
-      return required.reduce((promise, argument) => {
-        return promise.then((args) => getArgument(args, argument))
-      }, Promise.resolve(args))
-    })
+  function fetchVersion (args) {
+    return getVersion({ repo: args.repos[0] })
+      .then((currentVersion) => Object.assign({}, args, { currentVersion }))
+      .catch((err) => args)
+  }
+
+  args = await fetchRepos(args)
+  args = await fetchTag(args)
+  args = await fetchVersion(args)
+
+  return required.reduce((promise, argument) => {
+      return promise.then((args) => getArgument(args, argument))
+    }, Promise.resolve(args))
+    .catch((err) => console.error(err))
 }
 
 function getArgument (args, argument) {
